@@ -1,8 +1,8 @@
 """Authentication and JWT Token Generation Endpoints."""
 
-from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from typing import Annotated, Optional
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from app.api.deps import SessionDep
 from app.core.config import settings
@@ -14,15 +14,19 @@ from app.schemas.user import UserResponse
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_V1_STR}/auth/login",
+bearer_scheme = HTTPBearer(
+    scheme_name="BearerAuth",
+    description="Enter JWT Bearer access token only (no username, password, or client credentials needed).",
     auto_error=False,
 )
 
+oauth2_scheme = bearer_scheme
+
 
 async def get_current_user(
+    request: Request,
     session: SessionDep,
-    token: Annotated[str, Depends(oauth2_scheme)],
+    auth: Annotated[Optional[HTTPAuthorizationCredentials], Depends(bearer_scheme)],
 ) -> User:
     """Dependency to retrieve and validate currently authenticated user from JWT Bearer token."""
     credentials_exception = HTTPException(
@@ -30,6 +34,18 @@ async def get_current_user(
         detail="Could not validate credentials or token expired.",
         headers={"WWW-Authenticate": "Bearer"},
     )
+    token: Optional[str] = None
+    if auth and auth.credentials:
+        token = auth.credentials
+    else:
+        auth_header = request.headers.get("Authorization")
+        if auth_header:
+            parts = auth_header.split()
+            if len(parts) == 2 and parts[0].lower() == "bearer":
+                token = parts[1]
+            elif len(parts) == 1:
+                token = parts[0]
+
     if not token:
         raise credentials_exception
 
