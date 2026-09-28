@@ -1,0 +1,14 @@
+{
+    "venkat narasimha": {
+        "name": "Venkat Narasimha",
+        "phone": "+91 98765 43210",
+        "email": "venkat@example.com",
+        "category": "Work"
+    },
+    "anita sharma": {
+        "name": "Anita Sharma",
+        "phone": "+91 90000 11111",
+        "email": "anita@example.com",
+        "category": "Personal"
+    }
+}
