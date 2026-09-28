@@ -1,0 +1,7 @@
+# Local module gitignore
+__pycache__/
+*.pyc
+.env
+logs/*.log
+exports/*.json
+!exports/.gitkeep
