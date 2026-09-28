@@ -22,6 +22,12 @@ from app.schemas.product import (
     ProductUpdate,
 )
 
+from app.schemas.auth import (
+    LoginRequest,
+    Token,
+    TokenPayload,
+)
+
 __all__ = [
     "HealthCheckResponse",
     "MessageResponse",
@@ -38,4 +44,7 @@ __all__ = [
     "ProductResponse",
     "ProductSummary",
     "ProductUpdate",
+    "LoginRequest",
+    "Token",
+    "TokenPayload",
 ]

@@ -117,8 +117,19 @@ async def get_product_by_id(
 @router.put(
     "/{product_id}",
     response_model=ProductResponse,
-    summary="Update product details (Full/Partial)",
+    summary="Update product details (Full)",
     description="Modify attributes of an existing product such as price, inventory, or description.",
+    responses={
+        200: {"description": "Product updated successfully"},
+        404: {"description": "Product not found"},
+        409: {"description": "SKU collision"},
+    },
+)
+@router.patch(
+    "/{product_id}",
+    response_model=ProductResponse,
+    summary="Update product details (Partial)",
+    description="Partially modify attributes of an existing product such as price, inventory, or description.",
     responses={
         200: {"description": "Product updated successfully"},
         404: {"description": "Product not found"},

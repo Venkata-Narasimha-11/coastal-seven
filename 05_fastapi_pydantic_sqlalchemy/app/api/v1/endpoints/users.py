@@ -116,8 +116,19 @@ async def get_user_by_id(
 @router.put(
     "/{user_id}",
     response_model=UserResponse,
-    summary="Update user details (Full/Partial)",
+    summary="Update user details (Full)",
     description="Updates existing user profile attributes. Password will be re-hashed if provided.",
+    responses={
+        200: {"description": "User updated successfully"},
+        404: {"description": "User not found"},
+        409: {"description": "Email or username collision"},
+    },
+)
+@router.patch(
+    "/{user_id}",
+    response_model=UserResponse,
+    summary="Update user details (Partial)",
+    description="Partially updates existing user profile attributes.",
     responses={
         200: {"description": "User updated successfully"},
         404: {"description": "User not found"},
