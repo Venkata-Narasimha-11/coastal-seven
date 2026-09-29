@@ -59,3 +59,13 @@ test_pgdata/
 # Project exports
 exports/*.json
 !exports/.gitkeep
+
+# Celery and Mypy
+celerybeat-schedule*
+.mypy_cache/
+
+# Uploaded test media
+09_file_uploads_websockets_testing/app/uploads/originals/*
+!09_file_uploads_websockets_testing/app/uploads/originals/.gitkeep
+09_file_uploads_websockets_testing/app/uploads/thumbnails/*
+!09_file_uploads_websockets_testing/app/uploads/thumbnails/.gitkeep

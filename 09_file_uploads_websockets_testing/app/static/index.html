@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-Time Media Hub | File Uploads & WebSockets</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%3E<text y=%2226%22 font-size=%2226%22>⚡</text></svg>">
+</head>
+<body>
+
+  <header>
+    <div class="logo-area">
+      <span class="logo-icon">⚡</span>
+      <div>
+        <h1>Real-Time Media & Notification Hub</h1>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">FastAPI • UploadFile • Pillow Resizing • WebSockets • Pytest</p>
+      </div>
+    </div>
+    <div style="display: flex; gap: 1rem; align-items: center;">
+      <a href="/docs" target="_blank" class="btn btn-secondary" style="font-size: 0.85rem;">Swagger Docs</a>
+      <div class="status-badge">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusText">Connecting...</span>
+        <span style="color: var(--text-muted); font-size: 0.75rem;">(Active: <b id="activeCount">0</b>)</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left Column: Upload & Live Processing -->
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>📤</span> Upload Media & Process
+        </div>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">Auto Pillow Resize (Thumb & Medium)</span>
+      </div>
+
+      <div class="dropzone" id="dropzone">
+        <div class="dropzone-icon">📁</div>
+        <div style="font-weight: 600; font-size: 1.05rem; margin-bottom: 0.25rem;">Drag & drop images here</div>
+        <div style="color: var(--text-muted); font-size: 0.85rem;">Supports JPEG, PNG, WebP, GIF (Max 10 MB)</div>
+        <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+      </div>
+
+      <div style="border-top: 1px solid var(--border-color); padding-top: 1rem;">
+        <div style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);">
+          Client ID: <span id="clientIdLabel" style="color: var(--accent); font-family: monospace;"></span>
+        </div>
+        <div class="input-row">
+          <input type="text" id="chatInput" placeholder="Broadcast a real-time message to all clients...">
+          <button id="sendBtn" class="btn">Broadcast</button>
+          <button id="pingBtn" class="btn btn-secondary">Ping</button>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);">Event & Connection Log</div>
+        <div class="terminal-box" id="logBox"></div>
+      </div>
+    </section>
+
+    <!-- Right Column: Live Notification Feed -->
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>🔔</span> Live WebSocket Event Stream
+        </div>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">Real-Time Push Notifications</span>
+      </div>
+
+      <div class="feed-container" id="feedContainer">
+        <!-- Live feed cards injected here -->
+      </div>
+    </section>
+
+    <!-- Full Width: Stored Media Gallery -->
+    <section class="panel gallery-section">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>🖼️</span> Stored Media Gallery
+        </div>
+        <button onclick="loadGallery()" class="btn btn-secondary" style="font-size: 0.8rem;">Refresh Gallery</button>
+      </div>
+
+      <div class="gallery-grid" id="galleryGrid">
+        <!-- Media gallery cards injected here -->
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Day 9: File Uploads, WebSockets, Testing with Pytest & Code Quality • Python Intensive Course
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
