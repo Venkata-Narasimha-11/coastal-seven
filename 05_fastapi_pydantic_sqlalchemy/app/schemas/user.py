@@ -29,6 +29,10 @@ class UserBase(BaseModel):
         description="User's full legal or display name",
         examples=["John Doe"],
     )
+    role: Optional[str] = Field(
+        "user",
+        description="Account role ('user' or 'admin')",
+    )
     is_active: bool = Field(
         True,
         description="Whether the user account is active",
