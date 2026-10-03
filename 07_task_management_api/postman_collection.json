@@ -1,0 +1,745 @@
+{
+  "info": {
+    "_postman_id": "day7-task-management-api-collection",
+    "name": "Day 7 - Mini-Project 2: Task Management REST API",
+    "description": "Comprehensive Postman Collection covering JWT Authentication, Role-Based Access Control (RBAC), Project CRUD, Task CRUD, Workflow State Transitions, Filtering & Pagination, and Error Handling.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:8000", "type": "string" },
+    { "key": "access_token", "value": "", "type": "string" },
+    { "key": "refresh_token", "value": "", "type": "string" },
+    { "key": "admin_token", "value": "", "type": "string" },
+    { "key": "manager_token", "value": "", "type": "string" },
+    { "key": "developer_token", "value": "", "type": "string" },
+    { "key": "viewer_token", "value": "", "type": "string" },
+    { "key": "project_id", "value": "1", "type": "string" },
+    { "key": "task_id", "value": "1", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register New User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"henry_dev\",\n  \"email\": \"henry@taskmanager.io\",\n  \"password\": \"Password123!\",\n  \"full_name\": \"Henry Ford\",\n  \"role\": \"developer\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login - Admin (Save Tokens)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.access_token) {",
+                  "    pm.collectionVariables.set('access_token', jsonData.access_token);",
+                  "    pm.collectionVariables.set('admin_token', jsonData.access_token);",
+                  "    pm.collectionVariables.set('refresh_token', jsonData.refresh_token);",
+                  "    console.log('Saved Admin Access & Refresh tokens.');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"AdminPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login - Manager (Save Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.access_token) {",
+                  "    pm.collectionVariables.set('manager_token', jsonData.access_token);",
+                  "    pm.collectionVariables.set('access_token', jsonData.access_token);",
+                  "    console.log('Saved Manager Token.');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"alice_pm\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login - Developer (Save Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.access_token) {",
+                  "    pm.collectionVariables.set('developer_token', jsonData.access_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"charlie_dev\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login - Viewer (Save Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.access_token) {",
+                  "    pm.collectionVariables.set('viewer_token', jsonData.access_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"fiona_viewer\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "OAuth2 Password Form Login (/token)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "username", "value": "alice_pm", "type": "text" },
+                { "key": "password", "value": "Password123!", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/token",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "token"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Access Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "refresh"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User Profile (/me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Projects CRUD & Members",
+      "item": [
+        {
+          "name": "Create Project",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('project_id', jsonData.id);",
+                  "    console.log('Saved project_id:', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Payments Gateway V2\",\n  \"description\": \"Multi-currency payment gateway service.\",\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/projects/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "projects", ""]
+            }
+          }
+        },
+        {
+          "name": "List Projects (Paginated & Scoped)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{manager_token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/projects/?page=1&limit=10&status=active",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "projects", ""],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "status", "value": "active" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Project Details with Task Metrics",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{manager_token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/projects/{{project_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "projects", "{{project_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Project Details",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Global Payments & Settlement Gateway\",\n  \"status\": \"planning\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/projects/{{project_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "projects", "{{project_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Add Team Member to Project",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 4,\n  \"role\": \"contributor\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/projects/{{project_id}}/members",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "projects", "{{project_id}}", "members"]
+            }
+          }
+        },
+        {
+          "name": "Delete Project",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/projects/{{project_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "projects", "{{project_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Tasks CRUD & Operations",
+      "item": [
+        {
+          "name": "Create Task in Project",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('task_id', jsonData.id);",
+                  "    console.log('Saved task_id:', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Implement 3D Secure 2.0 Webhook Flow\",\n  \"description\": \"Handle frictionless authentication callbacks from Visa and Mastercard.\",\n  \"project_id\": 1,\n  \"priority\": \"high\",\n  \"due_date\": \"2026-10-15T18:00:00Z\",\n  \"assignee_id\": 4\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Task Details (Allowed Transitions & Logs)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{manager_token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{task_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "{{task_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Full Update Task (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Implement 3D Secure 2.0 and EMVCo SCA Support\",\n  \"description\": \"Comprehensive SCA compliance.\",\n  \"priority\": \"urgent\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{task_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "{{task_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Partial Update Task (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"priority\": \"medium\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{task_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "{{task_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Task",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{task_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "{{task_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Task Workflow & State Machine",
+      "item": [
+        {
+          "name": "Transition: TODO -> IN_PROGRESS",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{developer_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"in_progress\",\n  \"notes\": \"Developer started implementation.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{task_id}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "{{task_id}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "Illegal Transition: IN_PROGRESS -> COMPLETED (Expect 400)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{developer_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\",\n  \"notes\": \"Attempting to bypass code review.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{task_id}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "{{task_id}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "Transition: IN_PROGRESS -> REVIEW",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{developer_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"review\",\n  \"notes\": \"Pull Request #12 opened for peer review.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{task_id}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "{{task_id}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "Approve & Complete: REVIEW -> COMPLETED (Manager)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\",\n  \"notes\": \"Peer review passed with flying colors. Deployed to production.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{task_id}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "{{task_id}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "Reopen Completed Task (Manager)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"in_progress\",\n  \"notes\": \"Reopened to handle regression reported by QA.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{task_id}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "{{task_id}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "Assign Task to Member",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assignee_id\": 5,\n  \"notes\": \"Assigned to Diana for backend optimization.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{task_id}}/assign",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "{{task_id}}", "assign"]
+            }
+          }
+        },
+        {
+          "name": "Get Task Audit History Timeline",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{manager_token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{task_id}}/history",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "{{task_id}}", "history"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Filtering & Pagination",
+      "item": [
+        {
+          "name": "Filter by Status (in_progress)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{manager_token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/?status=in_progress",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", ""],
+              "query": [{ "key": "status", "value": "in_progress" }]
+            }
+          }
+        },
+        {
+          "name": "Filter by Priority (urgent)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{manager_token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/?priority=urgent",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", ""],
+              "query": [{ "key": "priority", "value": "urgent" }]
+            }
+          }
+        },
+        {
+          "name": "Filter by Assignee (User ID 4)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{manager_token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/?assignee_id=4",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", ""],
+              "query": [{ "key": "assignee_id", "value": "4" }]
+            }
+          }
+        },
+        {
+          "name": "Full-Text Search Query ('Terraform')",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{manager_token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/?search=Terraform",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", ""],
+              "query": [{ "key": "search", "value": "Terraform" }]
+            }
+          }
+        },
+        {
+          "name": "Pagination Envelope (page=1, limit=3, sorted by priority)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{manager_token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/?page=1&limit=3&sort_by=priority&sort_order=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", ""],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "3" },
+                { "key": "sort_by", "value": "priority" },
+                { "key": "sort_order", "value": "desc" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Role-Based Access Control (RBAC)",
+      "item": [
+        {
+          "name": "Viewer Attempt Task Creation (Expect 403)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{viewer_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Viewer Illegal Task\",\n  \"project_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", ""]
+            }
+          }
+        },
+        {
+          "name": "Viewer Attempt Status Change (Expect 403)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{viewer_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/1/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "1", "status"]
+            }
+          }
+        },
+        {
+          "name": "Developer Attempt Arbitrary Reassign (Expect 403)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{developer_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assignee_id\": 4\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/3/assign",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "3", "assign"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. System & Error Diagnostics",
+      "item": [
+        {
+          "name": "System Health Check & Database Ping",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "health"]
+            }
+          }
+        },
+        {
+          "name": "404 Resource Not Found Test",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/99999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "99999"]
+            }
+          }
+        },
+        {
+          "name": "422 Request Validation Error Test",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"u\",\n  \"email\": \"invalid-email-address\",\n  \"password\": \"12\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
