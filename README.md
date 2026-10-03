@@ -16,7 +16,9 @@ Welcome! Below is the roadmap and file index prepared for today's learning sessi
 | **Day 7** | **Mini-Project 2: Enterprise Task Management REST API** | JWT Authentication & OAuth2 Bearer, RBAC (`admin`, `manager`, `developer`, `viewer`), Project & Task CRUD, Status Workflow State Machine, Filtering & Pagination, Alembic Migrations, Swagger Docs, Postman Collection, and 41 automated `pytest` tests | Production-grade Task Management REST API with full lifecycle workflow enforcement and peer review sign-off. |
 | **Day 8** | **Async Programming, Redis Caching & Celery Background Tasks** | Event loop internals, coroutines, `async def` vs `def`, `asyncio.gather()`, Redis Cache-Aside pattern, TTL, cache invalidation, Redis Sorted Set sliding-window rate limiting, Celery workers (Windows solo pool), Celery Beat periodic crons, retries with exponential backoff & jitter, Flower monitoring, FastAPI `BackgroundTasks` vs Celery comparison, and unified high-performance integrated dashboard with 16 automated tests | Production-grade high-concurrency API service with live Redis caching, algorithmic rate limiting, and distributed Celery background processing. |
 | **Day 9** | **File Uploads, WebSockets, Testing & Code Quality** | `UploadFile`, streaming chunks, magic-byte inspection, Pillow aspect-ratio resizing, multi-resolution thumbnails (150x150, 600x600 WebP), static file serving, full-duplex WebSockets, `ConnectionManager` (personal, channels, broadcast, heartbeat), 38 automated `pytest` tests reaching 92%+ coverage, and Black, isort, Flake8, mypy code quality pipeline | Production-grade real-time media hub with instant WebSocket push notifications, responsive web dashboard, and CI/CD-ready lint-clean codebase with >92% test coverage. |
-
+| **Day 10** | **Mini-Project 3: Production E-Commerce Backend Hub** | Complete authentication (JWT + RBAC), product catalog CRUD & Pillow image/thumbnail uploads, Redis shopping cart, transactional order checkout with atomic stock availability validation, Celery background confirmation email tasks, full-duplex WebSocket order tracking, Redis Cache-Aside product caching, and 48 automated tests | Production-grade e-commerce backend with Redis cart, stock validation, background email, real-time updates, and caching working end-to-end. |
+| **Day 11** | **React Fundamentals, Hooks & Router Integration** | Components, JSX, props, composition slots, conditional & list rendering, `useState`, `useEffect` with cleanup, `useRef` DOM access & render counters, controlled inputs, SyntheticEvents, React Router v6 nested routes & `<Outlet />`, `useParams`, `useNavigate`, Axios service layer, request/response interceptors with silent 401 token refresh queues, `<ProtectedRoute />` with RBAC, and full FastAPI integration with 16 automated backend tests and 12-step demo verification | Production-grade multi-page React application with client-side routing, interactive fundamentals lab, and JWT-authenticated calls into the FastAPI backend. |
+| **Day 12** | **Tailwind CSS, Shadcn/ui, Forms & Validation** | Utility-first styling, responsive breakpoints, persistent dark mode strategy, Shadcn/ui suite (`Button`, `Dialog`, `Table`, `Toast`, `DropdownMenu`, `Tabs`), `react-hook-form` state handling, `Zod` validation schemas with password refinements, dynamic form fields (`useFieldArray`), multi-step form workflows (Checkout & Product wizards), `react-dropzone` drag & drop image uploads with live preview, and WCAG A11y accessibility standards | Production-grade responsive UI with accessible client-validated forms, interactive Day 12 mastery lab, and seamless integration with FastAPI backend. |
 
 ---
 
@@ -140,6 +142,101 @@ Located in: [`09_file_uploads_websockets_testing/`](file:///c:/Users/venka/Deskt
   - [`tests/`](file:///c:/Users/venka/Desktop/Narasimha/09_file_uploads_websockets_testing/tests): **38 automated pytest tests passing 100% with 92.31% code coverage**.
   - [`run.py`](file:///c:/Users/venka/Desktop/Narasimha/09_file_uploads_websockets_testing/run.py): FastAPI application launcher.
 
+### 9️⃣ Day 10: Mini-Project 3: Production E-Commerce Backend Hub
+Located in: [`10_ecommerce_mini_project/`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project)
+
+- **FastAPI Core & Real-Time Engine**:
+  - [`app/main.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/main.py): FastAPI application with async lifespan, database table creation, and static mounts.
+  - [`app/core/config.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/core/config.py): Pydantic Settings V2 for PostgreSQL, Redis, Celery, JWT auth, and image limits.
+  - [`app/core/security.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/core/security.py): Password hashing via bcrypt, JWT access & refresh token encoding/decoding.
+  - [`app/core/redis_client.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/core/redis_client.py): Async Redis connection pool with automatic FakeRedis fallback.
+  - [`app/core/websocket_manager.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/core/websocket_manager.py): Full-duplex WebSocket ConnectionManager with channel subscriptions.
+  - [`app/celery_app.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/celery_app.py): Distributed Celery task app with Windows solo pool and eager fallback.
+- **Relational Domain Models & Schemas**:
+  - [`app/models/user.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/models/user.py): User entity with `UserRole` (`admin`, `customer`).
+  - [`app/models/product.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/models/product.py): Product model with inventory stock, price, category, and image URLs.
+  - [`app/models/order.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/models/order.py): Order & OrderItem models with `OrderStatus` state machine.
+  - [`app/schemas/`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/schemas): Pydantic validation schemas (`auth.py`, `user.py`, `product.py`, `cart.py`, `order.py`).
+- **Service Layer & Background Tasks**:
+  - [`app/services/cache_service.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/services/cache_service.py): Cache-Aside logic & pattern-based listing invalidation.
+  - [`app/services/cart_service.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/services/cart_service.py): Redis Hash shopping cart (`cart:{user_id}`) with live database stock verification.
+  - [`app/services/order_service.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/services/order_service.py): Atomic checkout transaction, strict stock validation, inventory decrements, and cancellation stock refunds.
+  - [`app/services/image_service.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/services/image_service.py): Magic bytes inspection and Pillow LANCZOS aspect-ratio thumbnail generator.
+  - [`app/tasks/order_tasks.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/tasks/order_tasks.py): Celery asynchronous confirmation and status update email tasks.
+- **REST Endpoints & WebSockets**:
+  - [`app/api/v1/endpoints/auth.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/api/v1/endpoints/auth.py): Register, login, token refresh, `/me` profile.
+  - [`app/api/v1/endpoints/products.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/api/v1/endpoints/products.py): Cached listing with `X-Cache` header, detail, Admin CRUD, image uploads.
+  - [`app/api/v1/endpoints/cart.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/api/v1/endpoints/cart.py): Redis cart get, add, update quantity, remove item, clear cart.
+  - [`app/api/v1/endpoints/orders.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/api/v1/endpoints/orders.py): Checkout, list orders, detail, status update, order cancellation.
+  - [`app/api/v1/endpoints/websockets.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/api/v1/endpoints/websockets.py): Full-duplex WebSocket stream `/ws/orders` and `/ws/broadcast` HTTP bridge.
+  - [`app/api/v1/endpoints/tasks.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/api/v1/endpoints/tasks.py): Celery task inspection endpoint.
+- **Frontend Web Dashboard**:
+  - [`app/static/index.html`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/static/index.html), [`app/static/css/styles.css`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/static/css/styles.css), [`app/static/js/app.js`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/app/static/js/app.js): Modern interactive dashboard with live catalog, Redis cart drawer, real-time WebSocket order tracking ticker, and Celery outbox log.
+- **Documentation, Testing & Tooling**:
+  - [`postman_collection.json`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/postman_collection.json): Production Postman collection v2.1 with 20 pre-configured requests.
+  - [`scripts/seed_data.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/scripts/seed_data.py): Sample database seeder with categories, products, and Pillow thumbnails.
+  - [`scripts/demo_flow.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/scripts/demo_flow.py): End-to-end automated command-line walkthrough script.
+  - [`tests/`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/tests): **48 automated pytest tests passing 100%**.
+  - [`run.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/run.py), [`celery_worker.py`](file:///c:/Users/venka/Desktop/Narasimha/10_ecommerce_mini_project/celery_worker.py).
+
+### 🔟 Day 11: React Fundamentals, Hooks & Router Integration
+Located in: [`11_react_fundamentals_hooks_router/`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router)
+
+- **FastAPI Core & JWT Backend**:
+  - [`backend/app/main.py`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/backend/app/main.py): FastAPI application with async lifespan schema creation and CORS middleware.
+  - [`backend/app/core/config.py`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/backend/app/core/config.py): Pydantic Settings, JWT secret keys, and CORS origins.
+  - [`backend/app/core/database.py`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/backend/app/core/database.py): Async SQLAlchemy 2.0 engine and session factory (`sqlite+aiosqlite`).
+  - [`backend/app/core/security.py`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/backend/app/core/security.py): Passlib bcrypt password hashing, JWT access & refresh token encoders.
+  - [`backend/app/api/deps.py`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/backend/app/api/deps.py): OAuth2 password bearer flow, `get_current_user`, and role enforcement.
+  - [`backend/app/api/v1/endpoints/auth.py`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/backend/app/api/v1/endpoints/auth.py): `/login`, `/register`, `/me`, and `/refresh` token rotation.
+  - [`backend/app/api/v1/endpoints/items.py`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/backend/app/api/v1/endpoints/items.py): Item CRUD, category filtering, search, and pagination.
+  - [`backend/app/api/v1/endpoints/analytics.py`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/backend/app/api/v1/endpoints/analytics.py): Dashboard analytics telemetry and distribution aggregations.
+- **Modern React 18 & Vite Frontend**:
+  - [`frontend/src/main.jsx`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/frontend/src/main.jsx): React DOM application entrypoint.
+  - [`frontend/src/App.jsx`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/frontend/src/App.jsx): React Router v6 nested route tree, `AuthProvider`, route guards.
+  - [`frontend/src/context/AuthContext.jsx`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/frontend/src/context/AuthContext.jsx): Global auth state, session persistence, automatic expiration listener.
+  - [`frontend/src/services/api.js`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/frontend/src/services/api.js): Centralized Axios client, Bearer request interceptor, 401 refresh token queue and replay.
+  - [`frontend/src/services/authService.js`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/frontend/src/services/authService.js), [`frontend/src/services/itemService.js`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/frontend/src/services/itemService.js): Domain service layers.
+  - [`frontend/src/hooks/`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/frontend/src/hooks): Custom hooks (`useAuth.js`, `useDebounce.js`, `useAsync.js`).
+  - [`frontend/src/components/common/`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/frontend/src/components/common): Reusable UI components (`Button`, `Input`, `Card`, `Badge`, `Alert`, `Modal`, `Spinner`, `Navbar`, `Sidebar`).
+  - [`frontend/src/components/items/`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/frontend/src/components/items): Task management UI (`ItemCard`, `ItemForm`, `ItemList`).
+  - [`frontend/src/components/routing/`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/frontend/src/components/routing): Route guards (`AppLayout`, `ProtectedRoute`, `PublicOnlyRoute`).
+  - [`frontend/src/pages/`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/frontend/src/pages): Application views (`HomePage`, `FundamentalsPage`, `LoginPage`, `RegisterPage`, `DashboardPage`, `ItemsPage`, `ItemDetailPage`, `ProfilePage`, `AdminPage`, `NotFoundPage`).
+- **Testing, Seeding & Demos**:
+  - [`scripts/run_demo.py`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/scripts/run_demo.py): Automated 12-step end-to-end verification script.
+  - [`backend/seed_data.py`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/backend/seed_data.py): Sample database seeder for admin & demo users and items.
+  - [`backend/tests/`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/backend/tests): **16 automated pytest tests passing 100%**.
+  - [`README.md`](file:///c:/Users/venka/Desktop/Narasimha/11_react_fundamentals_hooks_router/README.md): Comprehensive Day 11 architectural guide.
+
+### 1️⃣1️⃣ Day 12: Tailwind CSS, Shadcn/ui, Forms & Validation Fullstack Hub
+Located in: [`ecommerce-frontend/`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend) (connected to [`ecommerce-backend/`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-backend))
+
+- **Design System & Theme Engine**:
+  - [`ecommerce-frontend/tailwind.config.js`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/tailwind.config.js): Tailwind CSS tokens, container queries, HSL design tokens, animation keyframes, and `class` strategy dark mode.
+  - [`ecommerce-frontend/src/index.css`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/index.css): `@tailwind base; components; utilities;` with light `:root` and `.dark` palettes.
+  - [`ecommerce-frontend/src/context/ThemeContext.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/context/ThemeContext.jsx): Persistent Light/Dark/System theme context.
+  - [`ecommerce-frontend/src/lib/utils.js`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/lib/utils.js): Canonical `cn()` utility (`clsx` + `tailwind-merge`).
+- **Shadcn/ui Accessible Component Suite**:
+  - [`src/components/ui/button.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/components/ui/button.jsx): Button with 7 CVA variants, 4 sizes, and integrated loading spinner.
+  - [`src/components/ui/dialog.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/components/ui/dialog.jsx): Accessible Radix modal dialog with focus trapping and Escape handling.
+  - [`src/components/ui/table.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/components/ui/table.jsx): Data Table (Header, Body, Footer, Head, Row, Cell, Caption).
+  - [`src/components/ui/dropdown-menu.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/components/ui/dropdown-menu.jsx): Radix DropdownMenu with sub-items, separators, and shortcuts.
+  - [`src/components/ui/sonner.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/components/ui/sonner.jsx): Sonner toast integration for success, error, warning, info, and actions.
+  - [`src/components/ui/tabs.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/components/ui/tabs.jsx): Tabbed panels used in Admin and Showcase Lab.
+  - [`src/components/ui/input.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/components/ui/input.jsx), [`src/components/ui/label.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/components/ui/label.jsx), [`src/components/ui/card.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/components/ui/card.jsx), [`src/components/ui/badge.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/components/ui/badge.jsx), [`src/components/ui/textarea.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/components/ui/textarea.jsx).
+- **React Forms, Zod Validation & Form Accessibility (A11y)**:
+  - [`src/components/ui/form.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/components/ui/form.jsx): Form primitives with automatic `aria-invalid`, `aria-describedby`, accessible `<label htmlFor>`, and `role="alert"`.
+  - [`src/schemas/authSchemas.js`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/schemas/authSchemas.js): Zod schemas for login & registration with password match refinement.
+  - [`src/schemas/productSchemas.js`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/schemas/productSchemas.js): Zod product schemas with numeric type coercion and dynamic specification array.
+  - [`src/schemas/checkoutSchemas.js`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/schemas/checkoutSchemas.js): Step-by-step schemas with conditional superRefine validation.
+- **Dynamic Forms & Multi-Step Workflows**:
+  - [`src/pages/CheckoutPage.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/pages/CheckoutPage.jsx): 4-step multi-step checkout workflow with persistent state across steps.
+  - [`src/pages/AdminPage.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/pages/AdminPage.jsx): 4-step Product Creation Wizard with dynamic attributes via `useFieldArray`.
+- **Drag & Drop File Uploads & Live Previews**:
+  - [`src/components/ui/image-dropzone.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/components/ui/image-dropzone.jsx): `react-dropzone` drag-and-drop zone with instant Object URL preview, size limit check, and direct upload into Day 10 FastAPI Pillow service.
+- **Day 12 Interactive Mastery Lab**:
+  - [`src/pages/Day12LabPage.jsx`](file:///c:/Users/venka/Desktop/Narasimha/ecommerce-frontend/src/pages/Day12LabPage.jsx): Dedicated interactive testing ground with 6 testbeds (Shadcn Suite, Zod Validation Playground, Dynamic useFieldArray Builder, Multi-Step Wizard, Dropzone Sandbox, and A11y & Dark Mode Inspector).
+
 ---
 
 ## 🚀 How to Run the Programs
@@ -260,5 +357,65 @@ python -m mypy app
 
 # 5. Launch Day 9 FastAPI Server (Web Dashboard at http://127.0.0.1:8000/)
 python run.py
+
+# ==============================================================================
+# Run Day 10: Mini-Project 3: Production E-Commerce Backend Hub
+# ==============================================================================
+cd ../10_ecommerce_mini_project
+
+# 1. Seed Database & Sample Catalog with Pillow Thumbnails
+python scripts/seed_data.py
+
+# 2. Run Day 10 Live End-to-End Demo Script (all topics validated live)
+python scripts/demo_flow.py
+
+# 3. Run Day 10 Complete Automated Test Suite (48 Tests passing 100%)
+python -m pytest tests -v
+
+# 4. Optional: Run Celery Distributed Worker (Solo Pool for Windows)
+python celery_worker.py
+
+# 5. Launch Day 10 FastAPI Server (Interactive Storefront at http://127.0.0.1:8000/)
+python run.py
+
+# ==============================================================================
+# Run Day 11: React Fundamentals, Hooks & Router SPA (Connected to Day 10 Backend)
+# ==============================================================================
+# Option A: Run Fullstack with Day 10 E-Commerce Backend (Port 8000)
+# Terminal 1: Launch Day 10 E-Commerce Backend Hub
+cd ../10_ecommerce_mini_project
+python run.py
+
+# Terminal 2: Launch Day 11 React 18 & Vite Frontend SPA (Port 5173)
+cd ../11_react_fundamentals_hooks_router/frontend
+$env:PATH = "C:\Program Files\nodejs;$env:PATH"
+npm.cmd run dev
+# Open Storefront in browser at http://localhost:5173/ (Catalog, Redis Cart, Orders & WebSockets)
+
+# Option B: Run Standalone Day 11 Backend & Automated Verification
+cd ../11_react_fundamentals_hooks_router
+python backend/seed_data.py
+python scripts/run_demo.py
+$env:PYTHONPATH = "backend"
+python -m pytest backend/tests -v
+
+# ==============================================================================
+# Run Day 12: Tailwind CSS, Shadcn/ui, Forms & Validation Fullstack Hub
+# ==============================================================================
+# Terminal 1: Launch FastAPI Backend Hub (Port 8000)
+cd ../ecommerce-backend
+python scripts/seed_data.py
+python run.py
+
+# Terminal 2: Launch Vite Storefront & Day 12 Lab (Port 5173)
+cd ../ecommerce-frontend
+npm.cmd run dev
+# Open in browser:
+# - Storefront: http://localhost:5173/
+# - Day 12 Interactive Mastery Lab: http://localhost:5173/day12-lab
+# - Multi-Step Checkout: http://localhost:5173/checkout
+# - Admin Control Hub: http://localhost:5173/admin
+# - Interactive API Docs: http://127.0.0.1:8000/docs
 ```
+
 

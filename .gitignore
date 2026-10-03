@@ -69,3 +69,15 @@ celerybeat-schedule*
 !09_file_uploads_websockets_testing/app/uploads/originals/.gitkeep
 09_file_uploads_websockets_testing/app/uploads/thumbnails/*
 !09_file_uploads_websockets_testing/app/uploads/thumbnails/.gitkeep
+
+# Node & Frontend dependencies
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+.next/
+out/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.turbo/
