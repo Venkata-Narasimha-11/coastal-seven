@@ -19,6 +19,11 @@ Welcome! Below is the roadmap and file index prepared for today's learning sessi
 | **Day 10** | **Mini-Project 3: Production E-Commerce Backend Hub** | Complete authentication (JWT + RBAC), product catalog CRUD & Pillow image/thumbnail uploads, Redis shopping cart, transactional order checkout with atomic stock availability validation, Celery background confirmation email tasks, full-duplex WebSocket order tracking, Redis Cache-Aside product caching, and 48 automated tests | Production-grade e-commerce backend with Redis cart, stock validation, background email, real-time updates, and caching working end-to-end. |
 | **Day 11** | **React Fundamentals, Hooks & Router Integration** | Components, JSX, props, composition slots, conditional & list rendering, `useState`, `useEffect` with cleanup, `useRef` DOM access & render counters, controlled inputs, SyntheticEvents, React Router v6 nested routes & `<Outlet />`, `useParams`, `useNavigate`, Axios service layer, request/response interceptors with silent 401 token refresh queues, `<ProtectedRoute />` with RBAC, and full FastAPI integration with 16 automated backend tests and 12-step demo verification | Production-grade multi-page React application with client-side routing, interactive fundamentals lab, and JWT-authenticated calls into the FastAPI backend. |
 | **Day 12** | **Tailwind CSS, Shadcn/ui, Forms & Validation** | Utility-first styling, responsive breakpoints, persistent dark mode strategy, Shadcn/ui suite (`Button`, `Dialog`, `Table`, `Toast`, `DropdownMenu`, `Tabs`), `react-hook-form` state handling, `Zod` validation schemas with password refinements, dynamic form fields (`useFieldArray`), multi-step form workflows (Checkout & Product wizards), `react-dropzone` drag & drop image uploads with live preview, and WCAG A11y accessibility standards | Production-grade responsive UI with accessible client-validated forms, interactive Day 12 mastery lab, and seamless integration with FastAPI backend. |
+| **Day 13** | **E-Commerce Frontend Architecture: Part 1** | Modular folder architecture, component composition, Axios HTTP service layer, reactive interceptors, JWT persistence, protected routes, and interactive Day 13 mastery lab | Production-grade fullstack storefront with real-time interceptor inspector and seamless FastAPI backend integration. |
+| **Day 14** | **State Management, React Query & Performance Patterns** | Zustand global auth & cart stores, TanStack Query v5 caching, optimistic UI updates with snapshot rollback, infinite scrolling, React performance optimizations (`useMemo`, `useCallback`, `React.memo`), code splitting, and Lighthouse 90+ dashboard | High-performance storefront with 0ms optimistic UI updates, infinite product catalog, and interactive state benchmark lab. |
+| **Day 15** | **TypeScript for React & Component Testing** | Strict TypeScript interfaces, generics (`ApiResponse<T>`, `<GenericList<T>>`), polymorphic components (`Button as="button" \| "a"`), typed FastAPI schema mirrors, Vitest & React Testing Library (41 passing tests), MSW v2 API mocking, Playwright E2E browser automation (9 passing journeys), and automated GitHub Actions CI pipeline | Enterprise-grade type-safe React storefront backed by 41 automated component tests, MSW mock isolation, Playwright E2E testing, and CI verification. |
+| **Day 16** | **E-Commerce Frontend (Part 2)** | Global Zustand shopping cart store, React Hook Form + Zod checkout validation, TanStack React Query data layer & mutations, Order History & shipment tracking, Admin Dashboard with product CRUD & order status management, Dark/Light mode theme toggle, expanded automated test suite (63 passing tests), and end-to-end FastAPI integration | Complete, polished React e-commerce frontend with cart, checkout, order history, and admin dashboard fully connected end-to-end to FastAPI. |
+
 
 ---
 
@@ -416,6 +421,35 @@ npm.cmd run dev
 # - Multi-Step Checkout: http://localhost:5173/checkout
 # - Admin Control Hub: http://localhost:5173/admin
 # - Interactive API Docs: http://127.0.0.1:8000/docs
+
+# ==============================================================================
+# Run Day 15: TypeScript for React & Component Testing Fullstack Hub
+# ==============================================================================
+# Terminal 1: Launch Frontend & Interactive Testing Lab (Port 5173)
+cd ../15_typescript_react_component_testing/frontend
+npm run dev
+
+# Run Automated Test Suite (41 Vitest Tests + 9 Playwright E2E Tests):
+npm run typecheck       # Strict TypeScript verification
+npm run test:run        # Run 41 Vitest component & store tests
+npm run test:coverage   # V8 test coverage breakdown
+npm run test:e2e        # Run 9 Playwright browser user journeys
+npm run test:ci         # Run complete CI pipeline locally
+
+# ==============================================================================
+# Run Day 16: E-Commerce Frontend (Part 2) (Continuous in Day 15 Hub)
+# ==============================================================================
+# Terminal 1: Launch Backend (Port 8000)
+cd ../15_typescript_react_component_testing/backend
+python run.py
+
+# Terminal 2: Launch Frontend Storefront & Admin Hub (Port 5173)
+cd ../15_typescript_react_component_testing/frontend
+npm run dev
+
+# Run Day 16 Expanded Test Suite (63 automated Vitest tests passing 100%):
+npm run test:run
 ```
+
 
 
