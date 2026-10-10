@@ -10,6 +10,26 @@ def run():
     CacheService.invalidate_pattern('products:*')
     CacheService.invalidate_pattern('categories:*')
 
+    # Ensure all required categories exist
+    required_cats = [
+        ('Electronics', 'electronics', 'General electronics and gadgets'),
+        ('Fashion', 'fashion', 'Clothing and fashion'),
+        ('Audio', 'audio', 'Headphones, earbuds, and speakers'),
+        ('Wearables', 'wearables', 'Smartwatches, fitness bands, and rings'),
+        ('Laptops & Computers', 'laptops-computers', 'Laptops, desktops, and computing'),
+        ('Peripherals', 'peripherals', 'Keyboards, mice, monitors, and webcams'),
+        ('Gaming & VR', 'gaming-vr', 'Consoles, VR headsets, and handhelds'),
+        ('Cameras & Drones', 'cameras-drones', 'DSLR, mirrorless cameras, and drones'),
+        ('Smart Home', 'smart-home', 'Smart speakers, lighting, and automation'),
+        ('Accessories', 'accessories', 'Chargers, power banks, cables, and cases'),
+    ]
+    for c_name, c_slug, c_desc in required_cats:
+        c = db.query(Category).filter(Category.name == c_name).first()
+        if not c:
+            c = Category(name=c_name, slug=c_slug, description=c_desc)
+            db.add(c)
+    db.commit()
+
     cats = {c.name: c.id for c in db.query(Category).all()}
 
     amazon_products = [

@@ -4,8 +4,8 @@ import App from './App';
 import './index.css';
 
 async function enableMocking() {
-  // If ?mock=true query parameter is present, activate browser MSW worker
-  if (typeof window !== 'undefined' && window.location.search.includes('mock=true')) {
+  // Only enable MSW in development mode when ?mock=true query parameter is present
+  if (import.meta.env.DEV && typeof window !== 'undefined' && window.location.search.includes('mock=true')) {
     const { worker } = await import('./mocks/browser');
     return worker.start({
       onUnhandledRequest: 'bypass',

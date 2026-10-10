@@ -36,6 +36,18 @@ class Settings(BaseSettings):
             return v
         return []
 
+    # Trusted Proxies (for secure client IP extraction)
+    TRUSTED_PROXIES: List[str] = ["127.0.0.1", "::1"]
+
+    @field_validator("TRUSTED_PROXIES", mode="before")
+    @classmethod
+    def assemble_trusted_proxies(cls, v: Union[str, List[str]]) -> List[str]:
+        if isinstance(v, str) and not v.startswith("["):
+            return [i.strip() for i in v.split(",")]
+        elif isinstance(v, list):
+            return v
+        return ["127.0.0.1", "::1"]
+
     # Database Configuration
     USE_SQLITE_FALLBACK: bool = True
     SQLITE_DB_PATH: str = "ecommerce.db"

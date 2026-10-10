@@ -34,4 +34,14 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'lucide-icons': ['lucide-react'],
+        },
+      },
+    },
+  },
 });

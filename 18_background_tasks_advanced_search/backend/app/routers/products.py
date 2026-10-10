@@ -5,7 +5,7 @@ import re
 import uuid
 from pathlib import Path
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, UploadFile, File, status
 from PIL import Image
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session, joinedload
@@ -23,6 +23,7 @@ from app.schemas.product import (
 )
 from app.services.redis_service import CacheService
 from app.utils.auth import get_current_admin
+from app.utils.rate_limit import limiter
 
 router = APIRouter(prefix="/products", tags=["Products & Categories"])
 
@@ -87,7 +88,9 @@ def create_category(
 
 @router.get("", response_model=ProductListResponse)
 @router.get("/", response_model=ProductListResponse)
+@limiter.limit("60/minute")
 def list_products(
+    request: Request,
     page: int = Query(1, ge=1),
     size: int = Query(10, ge=1, le=100),
     category_id: Optional[int] = None,
@@ -109,9 +112,10 @@ def list_products(
     if category_id:
         query = query.filter(Product.category_id == category_id)
 
+    dialect_name = db.get_bind().dialect.name
     if search:
         search_term = search.strip()
-        if engine.dialect.name == "postgresql":
+        if dialect_name == "postgresql":
             # PostgreSQL Full-Text Search (tsvector) + Trigram Fuzzy Search (word_similarity)
             fts_condition = func.to_tsvector("english", Product.name + " " + func.coalesce(Product.description, "")).op("@@")(
                 func.plainto_tsquery("english", search_term)
@@ -139,7 +143,7 @@ def list_products(
         query = query.order_by(Product.price.desc())
     elif sort_by == "name_asc":
         query = query.order_by(Product.name.asc())
-    elif not search or engine.dialect.name != "postgresql":
+    elif not search or dialect_name != "postgresql":
         query = query.order_by(Product.created_at.desc())
 
     total = query.count()
@@ -174,7 +178,8 @@ def advanced_product_search(
     search_term = q.strip()
     query = db.query(Product).options(joinedload(Product.category)).filter(Product.is_active == True)
 
-    if engine.dialect.name == "postgresql":
+    dialect_name = db.get_bind().dialect.name
+    if dialect_name == "postgresql":
         fts_expr = func.to_tsvector("english", Product.name + " " + func.coalesce(Product.description, "")).op("@@")(
             func.plainto_tsquery("english", search_term)
         )
@@ -195,7 +200,7 @@ def advanced_product_search(
     return {
         "query": search_term,
         "mode": mode,
-        "dialect": engine.dialect.name,
+        "dialect": dialect_name,
         "count": len(products),
         "results": [
             {
