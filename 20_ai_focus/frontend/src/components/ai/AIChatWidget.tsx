@@ -179,7 +179,7 @@ export const AIChatWidget: React.FC = () => {
   return (
     <>
       {/* Floating Launcher Button */}
-      <div className="fixed bottom-6 right-6 z-40 flex items-center gap-2">
+      <div className="fixed bottom-24 right-6 z-40 flex items-center gap-2">
         {!isOpen && (
           <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/90 text-white text-xs font-medium shadow-lg backdrop-blur-md border border-slate-700 animate-fade-in">
             <Sparkles className="h-3.5 w-3.5 text-amber-300 animate-pulse" />
