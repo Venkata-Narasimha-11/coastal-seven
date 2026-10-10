@@ -1,7 +1,7 @@
 """Central application settings and configuration management using Pydantic Settings V2."""
 
 from pathlib import Path
-from typing import List, Union
+from typing import List, Union, Optional
 from pydantic import AnyHttpUrl, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -86,6 +86,15 @@ class Settings(BaseSettings):
 
     # Media & Uploads Storage
     UPLOAD_DIR: Path = BASE_DIR / "uploads"
+
+    # Day 20: AI & Vector Database Settings
+    GROQ_API_KEY: Optional[str] = ""
+    GROQ_MODEL: str = "llama-3.3-70b-versatile"
+    GEMINI_API_KEY: Optional[str] = ""
+    GEMINI_MODEL: str = "gemini-1.5-flash"
+    MISTRAL_API_KEY: Optional[str] = ""
+    CHROMA_PERSIST_DIR: str = "chroma_db"
+    AI_FALLBACK_ORDER: str = "groq,gemini,mock"
 
     model_config = SettingsConfigDict(
         env_file=str(BASE_DIR / ".env"),

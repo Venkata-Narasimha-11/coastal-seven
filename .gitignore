@@ -45,9 +45,11 @@ coverage.xml
 *.cover
 *.py,cover
 
-# PostgreSQL data and logs
+# PostgreSQL & Vector Database data and logs
 pgdata/
 test_pgdata/
+chroma_db/
+**/chroma_db/
 *.log
 
 # IDEs and editors

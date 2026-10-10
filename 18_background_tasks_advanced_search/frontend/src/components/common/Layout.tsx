@@ -6,6 +6,7 @@ import { Toaster } from '../ui/sonner';
 import Badge from '../ui/Badge';
 import { Sparkles, Shield, Cpu, RefreshCw, Radio } from 'lucide-react';
 import LiveChatWidget from '../realtime/LiveChatWidget';
+import AIChatWidget from '../ai/AIChatWidget';
 
 interface LayoutProps {
   children?: React.ReactNode;
@@ -65,6 +66,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* Real-time Floating Live Support Chat Widget */}
       <LiveChatWidget />
+
+      {/* Day 20 AI Shopping Assistant (RAG + SSE Streaming) */}
+      <AIChatWidget />
 
       {/* Global Toast Provider */}
       <Toaster richColors closeButton position="top-right" />

@@ -17,7 +17,9 @@ from app.routers import (
     products_router,
     tasks_router,
     websocket_router,
+    ai_chat_router,
 )
+
 from app.services.redis_service import get_redis
 from app.utils.rate_limit import limiter
 
@@ -75,6 +77,7 @@ app.include_router(products_router, prefix=settings.API_V1_STR)
 app.include_router(cart_router, prefix=settings.API_V1_STR)
 app.include_router(orders_router, prefix=settings.API_V1_STR)
 app.include_router(tasks_router, prefix=settings.API_V1_STR)
+app.include_router(ai_chat_router, prefix=settings.API_V1_STR)
 app.include_router(websocket_router)  # Mounted directly for /ws/orders/{order_id}
 
 
