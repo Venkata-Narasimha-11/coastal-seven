@@ -3,7 +3,7 @@
 import shutil
 from pathlib import Path
 from typing import Any, Dict
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile, status
 from sqlalchemy.orm import Session
 from celery.result import AsyncResult
 
@@ -11,6 +11,7 @@ from app.config import settings
 from app.database import get_db
 from app.models import Order, User, UserRole
 from app.utils.auth import get_current_admin, get_current_user
+from app.utils.rate_limit import limiter
 from app.services.celery_app import (
     celery_app,
     generate_pdf_invoice_task,
@@ -114,7 +115,9 @@ def trigger_order_invoice_generation(
 # 3. TRIGGER ENDPOINT: Upload CSV and Start Bulk Import (Admin ONLY)
 # -------------------------------------------------------------
 @router.post("/products/import-csv", status_code=status.HTTP_202_ACCEPTED)
+@limiter.limit("3/minute")
 def trigger_csv_product_import(
+    request: Request,
     file: UploadFile = File(...),
     admin: User = Depends(get_current_admin),
 ) -> Dict[str, Any]:

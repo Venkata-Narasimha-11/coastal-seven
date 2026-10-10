@@ -11,6 +11,7 @@ from app.utils.auth import (
     get_password_hash,
     verify_password,
 )
+from app.utils.rate_limit import limiter
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -49,7 +50,9 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=Token)
+@limiter.limit("5/minute")
 def login(
+    request: Request,
     login_in: UserLogin,
     db: Session = Depends(get_db),
 ):
