@@ -27,6 +27,7 @@ Welcome! Below is the roadmap and file index prepared for today's learning sessi
 | **Day 18** | **Background Tasks & Advanced Search** | Celery + Redis distributed workers (Windows solo pool), ReportLab automated PDF invoices, bulk CSV product import, PostgreSQL full-text search (`tsvector`), and Trigram fuzzy search (`pg_trgm` `word_similarity > 0.28`) | High-scale catalog with typo-tolerant product search, background worker queue, and PDF receipt downloads. |
 | **Day 19** | **API Security & Performance Optimization** | SlowAPI rate limiting (Login 5/min, CSV 3/min), OWASP safe client IP resolution, FastAPI GZip response compression, React code-splitting (`React.lazy`), image lazy loading, Lighthouse 94+ Mobile score, and 50-user Locust load testing | Hardened enterprise security with sub-35ms latency under 50 concurrent users and 41 passing pytest tests. |
 | **Day 20** | **AI Focus: RAG Pipeline & Streaming AI Chat** | Free LLM providers (Groq LLaMA-3.3, Google Gemini), ChromaDB vector store with ONNX/MiniLM embeddings, RAG catalog retrieval, 3-tier fallback provider strategy, Server-Sent Events (SSE) token streaming, and interactive product source citations with 1-click cart addition | Enterprise-grade intelligent streaming AI Shopping Assistant grounded in store inventory with 45 passing automated tests. |
+| **Day 21** | **AI Focus: Semantic Search, Redis Caching, Moderation & AI Agents** | AI-powered product descriptions, embedding-based semantic/vector search, AI content moderation, Redis AI response caching (SHA-256 keys), per-user rate limiting (tiered quotas), AI testing & mocking, multi-provider fallbacks, and autonomous AI agents with tool calling | Production-ready fullstack AI platform with 21 backend tests (100% passing) and 68 frontend Vitest tests (100% passing). |
 
 
 ---
@@ -452,6 +453,41 @@ cd ../15_typescript_react_component_testing/frontend
 npm run dev
 
 # Run Day 16 Expanded Test Suite (63 automated Vitest tests passing 100%):
+npm run test:run
+
+# ==============================================================================
+# Run Day 20: AI Focus — RAG Pipeline & Streaming AI Chat
+# ==============================================================================
+# Terminal 1: Launch FastAPI Backend Hub (Port 8000)
+cd ../20_ai_focus/backend
+.\.venv\Scripts\uvicorn.exe app.main:app --reload --port 8000
+
+# Terminal 2: Launch Vite Storefront (Port 5173)
+cd ../20_ai_focus/frontend
+npm run dev
+
+# Run Automated Test Suite:
+cd ../20_ai_focus/backend
+.\.venv\Scripts\pytest.exe tests/test_day20_ai_rag.py -v
+
+# ==============================================================================
+# Run Day 21: AI Focus — Semantic Search, Redis Caching, Moderation & Agents
+# ==============================================================================
+# Terminal 1: Launch FastAPI Backend Hub (Port 8000)
+cd ../21_ai_focus/backend
+.\.venv\Scripts\uvicorn.exe app.main:app --reload --port 8000
+
+# Terminal 2: Launch React 18 & Vite Frontend (Port 5173)
+cd ../21_ai_focus/frontend
+npm run dev
+
+# Run Day 21 Complete Automated Backend Test Suite (21 Tests passing 100%):
+cd ../21_ai_focus/backend
+.\.venv\Scripts\pytest.exe tests/test_day20_ai_rag.py tests/test_day21_ai_focus.py -v
+
+# Run Day 21 Complete Automated Frontend Test Suite (68 Tests passing 100%):
+cd ../21_ai_focus/frontend
+npm run typecheck
 npm run test:run
 ```
 
