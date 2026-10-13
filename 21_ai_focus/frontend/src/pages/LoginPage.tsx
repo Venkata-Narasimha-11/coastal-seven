@@ -58,6 +58,13 @@ export const LoginPage: React.FC = () => {
           <p className="text-xs text-slate-500 mt-1">Enter your credentials to access your account</p>
         </div>
 
+        {new URLSearchParams(window.location.search).get('registered') === 'true' && (
+          <div className="mb-6 p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-lg text-xs text-emerald-700 dark:text-emerald-300 flex items-center gap-2">
+            <span>✅</span>
+            <span>Account created successfully! Please sign in with your new credentials.</span>
+          </div>
+        )}
+
         {serverError && (
           <div className="mb-6">
             <ErrorMessage

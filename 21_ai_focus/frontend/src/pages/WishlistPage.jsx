@@ -84,6 +84,10 @@ export const WishlistPage = () => {
                       src={item.image_url}
                       alt={item.name}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=800&auto=format&fit=crop&q=80";
+                      }}
                     />
                   ) : (
                     <Package size={40} className="text-muted-foreground" />

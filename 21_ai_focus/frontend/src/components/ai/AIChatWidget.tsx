@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Sparkles, X, Send, Bot, ShoppingBag, Loader2, Wrench } from 'lucide-react';
+import useAuthStore from '../../stores/useAuthStore';
 import useCartStore from '../../stores/useCartStore';
 import { toast } from 'sonner';
 import { AIErrorBoundary } from './AIErrorBoundary';
@@ -44,13 +46,15 @@ export const AIChatWidget: React.FC = () => {
       id: 'welcome',
       role: 'assistant',
       content:
-        'Hello! I am your AI Shopping Assistant for Gunturu Store. Powered by autonomous tool calling, I can check live warehouse stock, calculate coupon savings (e.g. SAVE10), and find the best products grounded in our catalog. How can I help you today?',
+        'Hello! I am your SIVORA AI Stylist & Shopping Assistant ✨ Powered by autonomous tool calling, I can check live warehouse inventory, calculate coupon discounts (e.g. SAVE10), and recommend curated luxury fashion & lifestyle pieces. How may I assist you today?',
     },
   ]);
   const [isGenerating, setIsGenerating] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const addItemToCart = useCartStore((state) => state.addItem);
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -175,6 +179,11 @@ export const AIChatWidget: React.FC = () => {
   };
 
   const handleAddCitationToCart = (p: ProductCitation) => {
+    if (!isAuthenticated) {
+      setIsOpen(false);
+      navigate('/login');
+      return;
+    }
     addItemToCart(
       {
         id: p.id,
@@ -205,7 +214,7 @@ export const AIChatWidget: React.FC = () => {
       <div className="fixed bottom-24 right-4 sm:right-6 z-40">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="relative group p-4 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 text-white shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300"
+          className="relative group p-4 rounded-full bg-gradient-to-tr from-pink-600 via-rose-600 to-amber-500 text-white shadow-xl shadow-pink-500/30 hover:shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300"
           aria-label="Toggle AI Shopping Assistant"
         >
           <div className="absolute inset-0 rounded-full bg-white/20 animate-ping opacity-20 pointer-events-none" />
@@ -215,21 +224,21 @@ export const AIChatWidget: React.FC = () => {
 
       {/* Floating Chat Modal */}
       {isOpen && (
-        <div className="fixed bottom-24 right-4 sm:right-6 w-[92vw] sm:w-[440px] h-[580px] max-h-[82vh] bg-card text-foreground rounded-2xl shadow-2xl border border-border flex flex-col z-50 overflow-hidden animate-scale-up">
+        <div className="fixed bottom-24 right-4 sm:right-6 w-[92vw] sm:w-[440px] h-[580px] max-h-[82vh] bg-card text-foreground rounded-2xl shadow-2xl border border-pink-200/50 dark:border-slate-800 flex flex-col z-50 overflow-hidden animate-scale-up">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-sky-700 p-4 text-white flex items-center justify-between shadow-md">
+          <div className="bg-gradient-to-r from-rose-950 via-pink-900 to-slate-900 p-4 text-white flex items-center justify-between shadow-md border-b border-pink-500/20">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-white/15 backdrop-blur-md border border-white/20">
-                <Bot className="h-5 w-5 text-amber-300" />
+                <Sparkles className="h-5 w-5 text-amber-300" />
               </div>
               <div>
                 <h3 className="font-bold text-sm leading-tight flex items-center gap-1.5">
-                  Gunturu AI Agent
-                  <span className="text-[10px] bg-emerald-500/30 text-emerald-300 font-semibold px-2 py-0.5 rounded-full border border-emerald-400/30">
-                    Tools Active
+                  SIVORA AI Stylist
+                  <span className="text-[10px] bg-pink-500/30 text-pink-200 font-semibold px-2 py-0.5 rounded-full border border-pink-400/30">
+                    Live Co-Pilot
                   </span>
                 </h3>
-                <p className="text-[11px] text-blue-100">Live Stock • Coupons • 78 Catalog Items</p>
+                <p className="text-[11px] text-pink-200/80">Live Stock • Coupons • Curated Catalogue</p>
               </div>
             </div>
             <button

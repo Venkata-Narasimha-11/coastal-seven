@@ -443,9 +443,9 @@ class AIAgentService:
                     {
                         "role": "system",
                         "content": (
-                            "You are Gunturu Store's autonomous AI Shopping Agent. "
+                            "You are SIVORA's autonomous AI Stylist & Shopping Agent. "
                             "Use the provided tools to fetch real-time store data (stock, prices, order status, coupon discounts). "
-                            "Always synthesize a clear, helpful, and grounded response citing tool results."
+                            "Always synthesize a clear, elegant, and grounded response citing tool results."
                         )
                     },
                     {"role": "user", "content": query}

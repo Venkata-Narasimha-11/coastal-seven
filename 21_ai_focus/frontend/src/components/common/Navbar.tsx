@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   ShoppingCart,
+  ShoppingBag,
   Store,
   User as UserIcon,
   LogOut,
@@ -11,7 +12,9 @@ import {
   ShieldCheck,
   Package,
   Cpu,
+  Sparkles,
 } from 'lucide-react';
+import { SivoraLogo } from './SivoraLogo';
 import useAuthStore from '../../stores/useAuthStore';
 import useCartStore from '../../stores/useCartStore';
 import { useWishlist } from '../../hooks/useWishlist';
@@ -48,19 +51,24 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+    <header className="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-pink-100 dark:border-slate-800 shadow-sm">
+      {/* Nykaa Fashion / SIVORA Top Luxe Announcement Banner */}
+      <div className="bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 text-white text-[11px] font-bold tracking-widest uppercase py-1.5 px-4 text-center flex items-center justify-center gap-2">
+        <Sparkles className="h-3 w-3 text-amber-200 animate-spin" />
+        <span>SIVORA LUXE FEST • FLAT 40% OFF + EXTRA 10% WITH CODE <strong className="bg-white/20 px-1.5 py-0.5 rounded text-amber-200">SAVE10</strong> • FREE EXPRESS DELIVERY</span>
+        <Sparkles className="h-3 w-3 text-amber-200" />
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Brand */}
           <div className="flex items-center gap-6">
             <Link
               to="/"
-              className="flex items-center gap-2.5 font-bold text-slate-900 dark:text-white text-lg tracking-tight hover:text-blue-600 transition-colors"
+              className="hover:opacity-90 transition-opacity flex items-center"
+              data-testid="brand-logo-link"
             >
-              <div className="h-9 w-9 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-sm shadow-blue-500/30">
-                <Store className="h-5 w-5" />
-              </div>
-              <span className="font-black text-xl tracking-tight text-blue-600 dark:text-blue-400">Gunturu</span>
+              <SivoraLogo size="md" />
               <span className="sr-only">TypeScript & Vitest E-Shop</span>
             </Link>
 
@@ -142,27 +150,6 @@ export const Navbar: React.FC = () => {
                   >
                     <span>Orders</span>
                   </Link>
-
-                  <Link
-                    to="/wishlist"
-                    data-testid="nav-wishlist-link"
-                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${
-                      isActive('/wishlist')
-                        ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-semibold'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
-                    }`}
-                  >
-                    <Heart className={`h-4 w-4 ${wishlistCount > 0 ? 'text-rose-500 fill-rose-500' : 'text-rose-500'}`} />
-                    <span>Wishlist</span>
-                    {wishlistCount > 0 && (
-                      <span
-                        data-testid="wishlist-badge-count"
-                        className="ml-1 bg-rose-500 text-white text-[10px] font-bold rounded-full h-4 min-w-[16px] px-1 flex items-center justify-center shadow-sm"
-                      >
-                        {wishlistCount}
-                      </span>
-                    )}
-                  </Link>
                 </>
               )}
             </nav>
@@ -187,8 +174,8 @@ export const Navbar: React.FC = () => {
             {user?.role !== 'admin' && (
               <Link
                 to="/wishlist"
-                data-testid="nav-wishlist-icon-link"
-                aria-label={`Wishlist with ${wishlistCount} items`}
+                data-testid="nav-wishlist-link"
+                aria-label="Wishlist"
                 className="relative p-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 title="View Wishlist"
               >
@@ -199,9 +186,10 @@ export const Navbar: React.FC = () => {
                       : 'text-slate-600 dark:text-slate-300 hover:text-rose-500'
                   }`}
                 />
+                <span className="sr-only">Wishlist</span>
                 {wishlistCount > 0 && (
                   <span
-                    data-testid="wishlist-badge-count-mobile"
+                    data-testid="wishlist-badge-count"
                     className="absolute -top-1 -right-1 bg-rose-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow"
                   >
                     {wishlistCount}
@@ -218,27 +206,15 @@ export const Navbar: React.FC = () => {
                 aria-label={`Shopping cart with ${totalCartItems} items`}
                 className="relative p-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               >
-                <ShoppingCart className="h-5 w-5" />
+                <ShoppingBag className="h-5 w-5 text-slate-700 dark:text-slate-200 group-hover:text-pink-600 transition-colors" />
                 {totalCartItems > 0 && (
                   <span
                     data-testid="cart-badge-count"
-                    className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow"
+                    className="absolute -top-1 -right-1 bg-gradient-to-r from-pink-600 to-rose-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-sm shadow-pink-500/40"
                   >
                     {totalCartItems}
                   </span>
                 )}
-              </Link>
-            )}
-
-            {/* Orders Icon Link (Always visible for logged-in customer) */}
-            {user?.role !== 'admin' && isAuthenticated && (
-              <Link
-                to="/orders"
-                data-testid="nav-orders-icon-link"
-                className="relative p-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                title="My Orders"
-              >
-                <Package className="h-5 w-5" />
               </Link>
             )}
 

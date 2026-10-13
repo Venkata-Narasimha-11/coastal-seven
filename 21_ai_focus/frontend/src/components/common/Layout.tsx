@@ -27,37 +27,51 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       <footer className="border-t border-border/60 bg-muted/20 py-8 text-center text-xs text-muted-foreground transition-colors duration-200">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-4">
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
-            <Badge variant="outline" className="gap-1 border-primary/30 text-primary">
-              <Radio className="h-3 w-3 animate-pulse text-emerald-500" /> Day 17 Real-Time WebSockets
+          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+            <Badge variant="outline" className="gap-1 border-primary/30 text-primary text-[10px]">
+              <Radio className="h-3 w-3 animate-pulse text-emerald-500" /> Day 10-11 Core E-Commerce
             </Badge>
-            <Badge variant="secondary" className="gap-1">
-              <Sparkles className="h-3 w-3" /> Live Order Tracking + Notifications
+            <Badge variant="secondary" className="gap-1 text-[10px]">
+              <Sparkles className="h-3 w-3 text-pink-500" /> Day 12 Tailwind & Zod
             </Badge>
-            <Badge variant="secondary" className="gap-1">
-              <Cpu className="h-3 w-3" /> Admin ↔ Customer Live Chat
+            <Badge variant="secondary" className="gap-1 text-[10px]">
+              <Cpu className="h-3 w-3 text-purple-500" /> Day 14 Zustand & React Query
             </Badge>
-            <Badge variant="secondary" className="gap-1">
-              <Shield className="h-3 w-3" /> JWT Auth + CORS Config
+            <Badge variant="secondary" className="gap-1 text-[10px]">
+              <Shield className="h-3 w-3 text-blue-500" /> Day 15 TypeScript & Vitest
             </Badge>
-            <Badge variant="secondary" className="gap-1">
-              <RefreshCw className="h-3 w-3" /> Exponential Backoff Reconnection
+            <Badge variant="secondary" className="gap-1 text-[10px]">
+              <RefreshCw className="h-3 w-3 text-amber-500" /> Day 16-17 WebSockets Real-Time
+            </Badge>
+            <Badge variant="secondary" className="gap-1 text-[10px]">
+              <Cpu className="h-3 w-3 text-cyan-500" /> Day 18 Celery & CSV Import
+            </Badge>
+            <Badge variant="secondary" className="gap-1 text-[10px]">
+              <Shield className="h-3 w-3 text-emerald-500" /> Day 19 Rate Limiting & OWASP
+            </Badge>
+            <Badge variant="secondary" className="gap-1 text-[10px]">
+              <Sparkles className="h-3 w-3 text-rose-500" /> Day 20-21 AI RAG & ChromaDB Search
             </Badge>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-2 border-t border-border/40 text-[11px]">
-            <p>© 2026 Gunturu E-Commerce Fullstack Hub. All rights reserved.</p>
-            <div className="flex items-center gap-4">
-              <Link to="/" className="hover:text-primary transition-colors font-medium">
-                Store Catalog
-              </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-border/40 text-[11px]">
+            <p className="font-serif tracking-wide text-slate-700 dark:text-slate-300">
+              © 2026 <strong className="text-pink-600 dark:text-pink-400">SIVORA</strong> Luxury Fashion • Nykaa Fashion Flagship Hub (Day 10 - Day 21 Integrated).
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Link to="/" className="hover:text-primary transition-colors font-medium">Store Catalog</Link>
+              <Link to="/orders" className="hover:text-primary transition-colors font-medium">Order History</Link>
+              <Link to="/state-comparison" className="hover:text-primary transition-colors font-medium text-pink-600 dark:text-pink-400">Day 14 State Lab</Link>
+              <Link to="/performance-lab" className="hover:text-primary transition-colors font-medium text-purple-600 dark:text-purple-400">Day 14 Perf Lab</Link>
+              <Link to="/testing-lab" className="hover:text-primary transition-colors font-medium text-blue-600 dark:text-blue-400">Day 15 Test Lab</Link>
+              <Link to="/admin?tab=tasks" className="hover:text-primary transition-colors font-medium text-amber-600 dark:text-amber-400">Day 18 Tasks & CSV</Link>
               <a
                 href="http://127.0.0.1:8000/docs"
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-primary transition-colors font-medium text-blue-500"
+                className="hover:text-primary transition-colors font-medium text-emerald-500"
               >
-                FastAPI Swagger Docs
+                FastAPI Swagger
               </a>
             </div>
           </div>
@@ -70,8 +84,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* Day 20 AI Shopping Assistant (RAG + SSE Streaming) */}
       <AIChatWidget />
 
-      {/* Global Toast Provider */}
-      <Toaster richColors closeButton position="top-right" />
+      {/* Global Toast Provider (Auto-dismisses in 3.5 seconds) */}
+      <Toaster richColors closeButton position="top-right" duration={3500} />
     </div>
   );
 };

@@ -5,7 +5,7 @@ test.describe('Product Catalog & Navigation', () => {
     await page.goto('/');
 
     // Check header
-    await expect(page.getByRole('heading', { name: /gunturu|e-commerce/i }).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: /sivora|e-commerce/i }).first()).toBeVisible();
 
     // Verify search input is visible
     const searchInput = page.getByTestId('search-input');

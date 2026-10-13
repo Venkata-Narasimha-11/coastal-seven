@@ -11,7 +11,7 @@ from app.services.rag_service import RAGService
 
 logger = logging.getLogger(__name__)
 
-SYSTEM_PROMPT_TEMPLATE = """You are Gunturu Store's intelligent, friendly AI Shopping Assistant.
+SYSTEM_PROMPT_TEMPLATE = """You are SIVORA's intelligent AI Stylist & Luxury Shopping Assistant.
 Your goal is to guide shoppers, answer product questions, and provide personalized recommendations based exclusively on our store's catalog.
 
 === CATALOG CONTEXT ===
@@ -103,8 +103,8 @@ class AIService:
 
         if not sources:
             text = (
-                f"{tool_intro}Hello! Welcome to Gunturu Store. I searched our catalog, but couldn't find exact matches "
-                f"for '{query}'. You can browse our categories above or check our top-rated electronics!"
+                f"{tool_intro}Hello! Welcome to SIVORA. I searched our catalog, but couldn't find exact matches "
+                f"for '{query}'. You can browse our categories above or check our top-rated collections!"
             )
         else:
             top_prod = sources[0]

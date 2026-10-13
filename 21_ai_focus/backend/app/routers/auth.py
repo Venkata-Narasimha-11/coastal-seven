@@ -35,12 +35,23 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
             detail="This username is already taken",
         )
 
+    # If username is 'admin' or role requested is admin, grant admin role
+    assigned_role = UserRole.CUSTOMER
+    if (
+        user_in.username.strip().lower() == "admin"
+        or user_in.role == UserRole.ADMIN
+        or (isinstance(user_in.role, str) and str(user_in.role).lower() == "admin")
+    ):
+        assigned_role = UserRole.ADMIN
+    elif user_in.role:
+        assigned_role = user_in.role
+
     user = User(
         email=user_in.email,
         username=user_in.username,
         full_name=user_in.full_name,
         hashed_password=get_password_hash(user_in.password),
-        role=user_in.role or UserRole.CUSTOMER,
+        role=assigned_role,
         is_active=True,
     )
     db.add(user)
@@ -50,7 +61,7 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=Token)
-@limiter.limit("5/minute")
+@limiter.limit("30/minute")
 def login(
     request: Request,
     login_in: UserLogin,
@@ -63,11 +74,7 @@ def login(
         .first()
     )
 
-    is_valid = bool(user and (
-        verify_password(login_in.password, user.hashed_password) or
-        (user.username == "admin" and login_in.password in ("AdminPassword123!", "secret123")) or
-        (user.username == "customer1" and login_in.password in ("SecretPassword123!", "secret123"))
-    ))
+    is_valid = bool(user and verify_password(login_in.password, user.hashed_password))
     if not is_valid:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

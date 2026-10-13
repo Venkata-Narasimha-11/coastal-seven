@@ -4,8 +4,18 @@ import { Product } from '../types/api';
 
 const getInitialCart = (): CartStoreItem[] => {
   try {
-    const raw = localStorage.getItem('local_cart');
-    return raw ? JSON.parse(raw) : [];
+    // Migration: One-time clear of legacy dummy test electronics from cart
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      if (!localStorage.getItem('sivora_cart_v3_clean')) {
+        localStorage.removeItem('local_cart');
+        localStorage.setItem('sivora_cart_v3_clean', 'true');
+        return [];
+      }
+    }
+    const raw = typeof localStorage !== 'undefined' ? localStorage.getItem('local_cart') : null;
+    if (!raw) return [];
+    const parsed: CartStoreItem[] = JSON.parse(raw);
+    return parsed.filter((item) => item && item.product && item.quantity > 0);
   } catch {
     return [];
   }

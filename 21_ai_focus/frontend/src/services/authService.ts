@@ -46,6 +46,7 @@ export const authService = {
       username: data.username,
       email: data.email,
       password: data.password,
+      role: data.role,
     });
   },
 

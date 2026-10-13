@@ -36,6 +36,8 @@ class ApiClient {
         if (error.response?.status === 401) {
           localStorage.removeItem('auth_token');
           localStorage.removeItem('auth_user');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
         }
         return Promise.reject(error);
       }

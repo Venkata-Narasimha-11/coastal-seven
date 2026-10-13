@@ -89,7 +89,7 @@ class AIDescriptionService:
             f"{feature_bullets}\n"
             f"#### 🎯 Why You'll Love It\n"
             f"Whether you are upgrading your current setup or shopping for the perfect gift, "
-            f"the {name} offers unrivaled reliability backed by Gunturu Store's verified warranty and rapid delivery."
+            f"the {name} offers unrivaled reliability backed by SIVORA's verified luxury warranty and rapid delivery."
         )
 
         return {

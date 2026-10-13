@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart, Check, ShieldCheck, Truck, Heart } from 'lucide-react';
 import { useProductQuery } from '../hooks/useProducts';
+import useAuthStore from '../stores/useAuthStore';
 import useCartStore from '../stores/useCartStore';
 import { useWishlist } from '../hooks/useWishlist';
 import Button from '../components/ui/Button';
@@ -20,6 +21,8 @@ export const ProductDetailPage: React.FC = () => {
 
   const { data: product, isLoading, isError, error, refetch } = useProductQuery(productId);
   const isFavorite = product ? isInWishlist(product.id) : false;
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
 
   if (isLoading) {
     return (
@@ -59,6 +62,10 @@ export const ProductDetailPage: React.FC = () => {
 
   const handleAddToCart = () => {
     if (isOutOfStock) return;
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
     addItemToCart(product, quantity);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 1500);

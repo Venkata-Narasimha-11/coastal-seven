@@ -142,7 +142,7 @@ def generate_pdf_invoice_task(self, order_id: int) -> Dict[str, Any]:
         # Step 2: Creating Enterprise PDF Layout & Stamp (55%)
         self.update_state(
             state="PROGRESS",
-            meta={"progress": 55, "message": "Applying Gunturu Store official stamp & calculating taxes..."},
+            meta={"progress": 55, "message": "Applying SIVORA official stamp & calculating taxes..."},
         )
         time.sleep(1.0)
 

@@ -92,7 +92,7 @@ def create_category(
 def list_products(
     request: Request,
     page: int = Query(1, ge=1),
-    size: int = Query(10, ge=1, le=100),
+    size: int = Query(10, ge=1, le=300),
     category_id: Optional[int] = None,
     search: Optional[str] = None,
     sort_by: Optional[str] = Query(None, description="price_asc, price_desc, newest, name_asc"),

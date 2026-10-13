@@ -114,6 +114,36 @@ export const RegisterPage: React.FC = () => {
             {...register('confirmPassword')}
           />
 
+          <div className="space-y-1.5 pt-1">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+              Account Role / Type
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <label className="flex items-center gap-2 p-2.5 border rounded-lg cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-medium">
+                <input
+                  type="radio"
+                  value="customer"
+                  defaultChecked
+                  {...register('role')}
+                  className="text-pink-600 focus:ring-pink-500"
+                />
+                <span>Customer</span>
+              </label>
+              <label className="flex items-center gap-2 p-2.5 border rounded-lg cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-medium">
+                <input
+                  type="radio"
+                  value="admin"
+                  {...register('role')}
+                  className="text-purple-600 focus:ring-purple-500"
+                />
+                <span className="font-bold text-purple-600 dark:text-purple-400">Store Admin</span>
+              </label>
+            </div>
+            <p className="text-[11px] text-slate-400">
+              Choose <strong>Store Admin</strong> or username <code>admin</code> for full dashboard access.
+            </p>
+          </div>
+
           <Button
             type="submit"
             variant="primary"

@@ -11,10 +11,33 @@ if TYPE_CHECKING:
     from app.models.order import Order
 
 
+from sqlalchemy.types import TypeDecorator
+
 class UserRole(str, enum.Enum):
     """User access control roles."""
     CUSTOMER = "customer"
     ADMIN = "admin"
+
+
+class UserRoleType(TypeDecorator):
+    """Resilient TypeDecorator ensuring both uppercase and lowercase enum values map cleanly."""
+    impl = String(50)
+    cache_ok = True
+
+    def process_bind_param(self, value, dialect):
+        if value is None:
+            return None
+        if isinstance(value, UserRole):
+            return value.value
+        return str(value).lower()
+
+    def process_result_value(self, value, dialect):
+        if value is None:
+            return None
+        val_str = str(value).lower()
+        if "admin" in val_str:
+            return UserRole.ADMIN
+        return UserRole.CUSTOMER
 
 
 class User(Base):
@@ -28,7 +51,7 @@ class User(Base):
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
     full_name: Mapped[str] = mapped_column(String(255), nullable=True)
     role: Mapped[UserRole] = mapped_column(
-        Enum(UserRole, name="user_role_enum"),
+        UserRoleType,
         default=UserRole.CUSTOMER,
         nullable=False,
     )

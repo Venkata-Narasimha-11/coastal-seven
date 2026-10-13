@@ -21,7 +21,7 @@ from reportlab.graphics.barcode.qr import QrCodeWidget
 
 
 def create_company_stamp(
-    company_name: str = "GUNTURU E-COMMERCE PVT LTD",
+    company_name: str = "SIVORA LUXURY FASHION PVT LTD",
     date_str: str = "08-OCT-2026",
 ) -> Drawing:
     """
@@ -176,8 +176,8 @@ def generate_enterprise_invoice_pdf(order: Any, output_path: Path) -> Path:
     # ---------------------------------------------------------
     header_left = Paragraph(
         """
-        <font size=22 color="#1e3a8a"><b>GUNTURU</b></font><font size=22 color="#ea580c"><b>STORE</b></font><br/>
-        <font size=7.5 color="#64748b">India's Premier Verified Digital E-Commerce</font>
+        <font size=22 color="#1e3a8a"><b>SIVORA</b></font><font size=22 color="#ea580c"><b>LUXE</b></font><br/>
+        <font size=7.5 color="#64748b">India's Premier Luxury Fashion & Couture Hub</font>
         """,
         styles["Normal"],
     )
@@ -243,7 +243,7 @@ def generate_enterprise_invoice_pdf(order: Any, output_path: Path) -> Path:
     seller_info = Paragraph(
         """
         <b>SOLD BY:</b><br/>
-        <b>Gunturu E-Commerce Private Limited</b><br/>
+        <b>SIVORA Luxury Fashion Private Limited</b><br/>
         Plot #45, Industrial Mega Tech Park, Autonagar<br/>
         Guntur, Andhra Pradesh, PIN: 522001<br/>
         <b>State Code:</b> 37 (Andhra Pradesh)<br/>
@@ -341,7 +341,7 @@ def generate_enterprise_invoice_pdf(order: Any, output_path: Path) -> Path:
         table_data.append(
             [
                 "1",
-                Paragraph("<b>Gunturu Electronics Order Items Package</b>", style_normal),
+                Paragraph("<b>SIVORA Luxury Fashion Order Items Package</b>", style_normal),
                 "8517",
                 f"${raw_total:.2f}",
                 "1",
@@ -449,13 +449,13 @@ def generate_enterprise_invoice_pdf(order: Any, output_path: Path) -> Path:
     )
 
     company_stamp = create_company_stamp(
-        company_name="GUNTURU E-COMMERCE PVT LTD",
+        company_name="SIVORA LUXURY FASHION PVT LTD",
         date_str=stamp_date_str,
     )
 
     footer_right = Table(
         [
-            [Paragraph("<b>For GUNTURU E-COMMERCE PVT LTD</b>", style_bold)],
+            [Paragraph("<b>For SIVORA LUXURY FASHION PVT LTD</b>", style_bold)],
             [company_stamp],
             [Paragraph("<font size=7 color='#64748b'>Authorized Corporate Seal & Signatory</font>", style_normal)],
         ],
